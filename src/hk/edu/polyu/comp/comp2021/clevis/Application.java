@@ -1,6 +1,6 @@
 package hk.edu.polyu.comp.comp2021.clevis;
 
-import hk.edu.polyu.comp.comp2021.clevis.model.Clevis;
+import hk.edu.polyu.comp.comp2021.clevis.controller.Clevis;
 
 import java.io.IOException;
 import java.util.Scanner;

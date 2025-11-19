@@ -1,5 +1,6 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
+import hk.edu.polyu.comp.comp2021.clevis.controller.Clevis;
 import org.junit.Test;
 
 public class ClevisTest {

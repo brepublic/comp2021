@@ -1,4 +1,6 @@
-package hk.edu.polyu.comp.comp2021.clevis.model;
+package hk.edu.polyu.comp.comp2021.clevis.controller;
+
+import hk.edu.polyu.comp.comp2021.clevis.model.*;
 
 import java.util.*;
 
@@ -354,7 +356,7 @@ public class Clevis {
             }
         }
         
-        return "";
+        return "Shape not found.";
     }
     
     private boolean coversPoint(String name, double x, double y) {
@@ -544,6 +546,6 @@ public class Clevis {
                 sb.append(listShapeRecursive(name, 0));
             }
         }
-        return sb.toString();
+        return (sb.length() == 0) ? "No shapes created." : sb.toString();
     }
 }
