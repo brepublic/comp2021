@@ -12,11 +12,13 @@ public class Clevis {
     private Map<String, Shape> shapes;
     private List<String> shapeOrder; // Maintains Z-order (later shapes have higher Z-index)
     private Map<String, Boolean> groupedShapes; // Tracks which shapes are part of a group
+    private List<ClevisListener> listeners;
     
     public Clevis() {
         this.shapes = new HashMap<>();
         this.shapeOrder = new ArrayList<>();
         this.groupedShapes = new HashMap<>();
+        this.listeners = new ArrayList<>();
     }
     
     /**
@@ -74,6 +76,50 @@ public class Clevis {
         }
     }
     
+    /**
+     * Adds a listener that will be notified whenever the drawable shape list changes.
+     * @param listener the listener to add
+     */
+    public void addListener(ClevisListener listener) {
+        if (listener != null && !listeners.contains(listener)) {
+            listeners.add(listener);
+        }
+    }
+    
+    /**
+     * Removes a previously registered listener.
+     * @param listener the listener to remove
+     */
+    public void removeListener(ClevisListener listener) {
+        listeners.remove(listener);
+    }
+    
+    /**
+     * Returns an immutable snapshot of the current drawable shapes in Z-order.
+     * Group shapes are omitted because they are logical containers only.
+     * @return the snapshot list
+     */
+    public List<Shape> getRenderableShapes() {
+        List<Shape> snapshot = new ArrayList<>();
+        for (String name : shapeOrder) {
+            Shape shape = shapes.get(name);
+            if (shape != null && !(shape instanceof Group)) {
+                snapshot.add(shape);
+            }
+        }
+        return Collections.unmodifiableList(snapshot);
+    }
+    
+    private void notifyListeners() {
+        if (listeners.isEmpty()) {
+            return;
+        }
+        List<Shape> snapshot = getRenderableShapes();
+        for (ClevisListener listener : listeners) {
+            listener.onShapesUpdated(snapshot);
+        }
+    }
+    
     private String createRectangle(String[] parts) {
         if (parts.length != 6) {
             return "Error: rectangle command requires 5 parameters: n x y w h";
@@ -90,6 +136,7 @@ public class Clevis {
         Rectangle rect = new Rectangle(name, x, y, w, h);
         shapes.put(name, rect);
         shapeOrder.add(name);
+        notifyListeners();
         return "";
     }
     
@@ -109,6 +156,7 @@ public class Clevis {
         Line line = new Line(name, x1, y1, x2, y2);
         shapes.put(name, line);
         shapeOrder.add(name);
+        notifyListeners();
         return "";
     }
     
@@ -127,6 +175,7 @@ public class Clevis {
         Circle circle = new Circle(name, x, y, r);
         shapes.put(name, circle);
         shapeOrder.add(name);
+        notifyListeners();
         return "";
     }
     
@@ -145,6 +194,7 @@ public class Clevis {
         Square square = new Square(name, x, y, l);
         shapes.put(name, square);
         shapeOrder.add(name);
+        notifyListeners();
         return "";
     }
     
@@ -182,6 +232,7 @@ public class Clevis {
             groupedShapes.put(componentName, true);
         }
         
+        notifyListeners();
         return "";
     }
     
@@ -211,6 +262,7 @@ public class Clevis {
         shapes.remove(name);
         shapeOrder.remove(name);
         
+        notifyListeners();
         return "";
     }
     
@@ -224,6 +276,7 @@ public class Clevis {
         }
         
         deleteShapeRecursive(name);
+        notifyListeners();
         return "";
     }
     
@@ -311,6 +364,7 @@ public class Clevis {
         double dy = Double.parseDouble(parts[3]);
         
         moveShapeRecursive(name, dx, dy);
+        notifyListeners();
         return "";
     }
     
