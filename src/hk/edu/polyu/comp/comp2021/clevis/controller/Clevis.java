@@ -11,12 +11,10 @@ import java.util.*;
 public class Clevis {
     private Map<String, Shape> shapes;
     private List<String> shapeOrder; // Maintains Z-order (later shapes have higher Z-index)
-    private Map<String, Boolean> groupedShapes; // Tracks which shapes are part of a group
     
     public Clevis() {
         this.shapes = new HashMap<>();
         this.shapeOrder = new ArrayList<>();
-        this.groupedShapes = new HashMap<>();
     }
     
     /**
@@ -163,7 +161,7 @@ public class Clevis {
             if (!shapes.containsKey(componentName)) {
                 return "Error: Shape not found: " + componentName;
             }
-            if (groupedShapes.containsKey(componentName) && groupedShapes.get(componentName)) {
+            if (isShapePartOfAnyGroup(componentName)) {
                 return "Error: Shape is already part of a group: " + componentName;
             }
             componentNames.add(componentName);
@@ -176,11 +174,6 @@ public class Clevis {
         Group group = new Group(groupName, componentNames);
         shapes.put(groupName, group);
         shapeOrder.add(groupName);
-        
-        // Mark component shapes as grouped
-        for (String componentName : componentNames) {
-            groupedShapes.put(componentName, true);
-        }
         
         return "";
     }
@@ -202,11 +195,6 @@ public class Clevis {
         Group group = (Group) shape;
         List<String> componentNames = group.getComponentNames();
         
-        // Unmark component shapes as grouped
-        for (String componentName : componentNames) {
-            groupedShapes.remove(componentName);
-        }
-        
         // Remove the group
         shapes.remove(name);
         shapeOrder.remove(name);
@@ -223,6 +211,11 @@ public class Clevis {
             return "Error: Shape not found: " + name;
         }
         
+        String availabilityError = ensureShapeAvailable(name);
+        if (availabilityError != null) {
+            return availabilityError;
+        }
+
         deleteShapeRecursive(name);
         return "";
     }
@@ -237,7 +230,6 @@ public class Clevis {
         }
         shapes.remove(name);
         shapeOrder.remove(name);
-        groupedShapes.remove(name);
     }
     
     private String getBoundingBox(String[] parts) {
@@ -247,6 +239,11 @@ public class Clevis {
         String name = parts[1];
         if (!shapes.containsKey(name)) {
             return "Error: Shape not found: " + name;
+        }
+
+        String availabilityError = ensureShapeAvailable(name);
+        if (availabilityError != null) {
+            return availabilityError;
         }
         
         double[] bbox = calculateBoundingBox(name);
@@ -306,6 +303,11 @@ public class Clevis {
         String name = parts[1];
         if (!shapes.containsKey(name)) {
             return "Error: Shape not found: " + name;
+        }
+
+        String availabilityError = ensureShapeAvailable(name);
+        if (availabilityError != null) {
+            return availabilityError;
         }
         double dx = Double.parseDouble(parts[2]);
         double dy = Double.parseDouble(parts[3]);
@@ -452,8 +454,16 @@ public class Clevis {
         if (!shapes.containsKey(name1)) {
             return "Error: Shape not found: " + name1;
         }
+        String availabilityError = ensureShapeAvailable(name1);
+        if (availabilityError != null) {
+            return availabilityError;
+        }
         if (!shapes.containsKey(name2)) {
             return "Error: Shape not found: " + name2;
+        }
+        availabilityError = ensureShapeAvailable(name2);
+        if (availabilityError != null) {
+            return availabilityError;
         }
         
         double[] bbox1 = calculateBoundingBox(name1);
@@ -484,6 +494,11 @@ public class Clevis {
         String name = parts[1];
         if (!shapes.containsKey(name)) {
             return "Error: Shape not found: " + name;
+        }
+
+        String availabilityError = ensureShapeAvailable(name);
+        if (availabilityError != null) {
+            return availabilityError;
         }
         
         return listShapeRecursive(name, 0);
@@ -535,11 +550,10 @@ public class Clevis {
     
     private String listAll() {
         StringBuilder sb = new StringBuilder();
-        // List in reverse order (highest Z-index first)
         for (int i = shapeOrder.size() - 1; i >= 0; i--) {
             String name = shapeOrder.get(i);
             // Only list top-level shapes (not shapes that are part of a group)
-            if (!groupedShapes.containsKey(name) || !groupedShapes.get(name)) {
+            if (!isShapePartOfAnyGroup(name)) {
                 if (sb.length() > 0) {
                     sb.append("\n");
                 }
@@ -547,5 +561,24 @@ public class Clevis {
             }
         }
         return (sb.length() == 0) ? "No shapes created." : sb.toString();
+    }
+
+    private String ensureShapeAvailable(String name) {
+        if (isShapePartOfAnyGroup(name)) {
+            return "Error: Shape is part of a group: " + name;
+        }
+        return null;
+    }
+
+    private boolean isShapePartOfAnyGroup(String name) {
+        for (Shape shape : shapes.values()) {
+            if (shape instanceof Group) {
+                Group group = (Group) shape;
+                if (group.getComponentNames().contains(name)) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 }
