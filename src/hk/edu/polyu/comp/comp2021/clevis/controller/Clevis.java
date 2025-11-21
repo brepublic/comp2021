@@ -6,11 +6,11 @@ import java.util.*;
 
 /**
  * Main class for the Clevis drawing tool.
- * Manages shapes and executes commands.
+ * Keeps track of shapes and runs commands.
  */
 public class Clevis {
     private Map<String, Shape> shapes;
-    private List<String> shapeOrder; // Maintains Z-order (later shapes have higher Z-index)
+    private List<String> shapeOrder; // keeps track of z-order (shapes created later are on top)
     
     public Clevis() {
         this.shapes = new HashMap<>();
@@ -18,9 +18,9 @@ public class Clevis {
     }
     
     /**
-     * Executes a command and returns the output.
+     * Runs a command and gives back the result.
      * @param command the command string
-     * @return the output string (empty if no output)
+     * @return the result string (empty if nothing to return)
      */
     public String executeCommand(String command) {
         if (command == null || command.trim().isEmpty()) {
@@ -195,7 +195,7 @@ public class Clevis {
         Group group = (Group) shape;
         List<String> componentNames = group.getComponentNames();
         
-        // Remove the group
+        // remove the group
         shapes.remove(name);
         shapeOrder.remove(name);
         
@@ -350,7 +350,7 @@ public class Clevis {
         double x = Double.parseDouble(parts[1]);
         double y = Double.parseDouble(parts[2]);
         
-        // Search in reverse order (highest Z-index first)
+        // search backwards (check shapes on top first)
         for (int i = shapeOrder.size() - 1; i >= 0; i--) {
             String name = shapeOrder.get(i);
             if (coversPoint(name, x, y)) {
@@ -401,9 +401,9 @@ public class Clevis {
         double right = rectX + width;
         double bottom = rectY + height;
         
-        // Check if point is inside rectangle (distance is 0)
+        // check if point is inside the rectangle (distance is 0)
         if (x >= rectX && x <= right && y >= rectY && y <= bottom) {
-            // Distance to nearest edge
+            // distance to the closest edge
             double distToLeft = x - rectX;
             double distToRight = right - x;
             double distToTop = y - rectY;
@@ -411,7 +411,7 @@ public class Clevis {
             return Math.min(Math.min(distToLeft, distToRight), Math.min(distToTop, distToBottom));
         }
         
-        // Point is outside, calculate distance to nearest edge
+        // point is outside, so find distance to the closest edge
         double dx = Math.max(rectX - x, Math.max(0, x - right));
         double dy = Math.max(rectY - y, Math.max(0, y - bottom));
         return Math.sqrt(dx * dx + dy * dy);
@@ -483,7 +483,7 @@ public class Clevis {
         double w2 = bbox2[2];
         double h2 = bbox2[3];
         
-        // Check if bounding boxes share any internal points
+        // check if the bounding boxes overlap at all
         return x1 < x2 + w2 && x1 + w1 > x2 && y1 < y2 + h2 && y1 + h1 > y2;
     }
     
@@ -539,7 +539,7 @@ public class Clevis {
             for (String componentName : group.getComponentNames()) {
                 sb.append(listShapeRecursive(componentName, indent + 1)).append("\n");
             }
-            // Remove trailing newline
+            // remove the extra newline at the end
             if (sb.length() > 0 && sb.charAt(sb.length() - 1) == '\n') {
                 sb.setLength(sb.length() - 1);
             }
@@ -552,7 +552,7 @@ public class Clevis {
         StringBuilder sb = new StringBuilder();
         for (int i = shapeOrder.size() - 1; i >= 0; i--) {
             String name = shapeOrder.get(i);
-            // Only list top-level shapes (not shapes that are part of a group)
+            // only show top-level shapes (don't show shapes that are inside a group)
             if (!isShapePartOfAnyGroup(name)) {
                 if (sb.length() > 0) {
                     sb.append("\n");

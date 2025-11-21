@@ -8,12 +8,12 @@ import java.util.*;
 import java.io.*;
 
 /**
- * Comprehensive test suite for all classes in the Clevis project.
- * This single test file consolidates all tests to achieve 95%+ line coverage.
+ * All the tests for the Clevis project.
+ * Put everything in one file to get good coverage.
  */
 public class AllTests {
 
-    // ========== Circle Tests ==========
+    // Circle tests
     
     @Test
     public void testCircleConstructor() {
@@ -147,7 +147,7 @@ public class AllTests {
         assertTrue(circle instanceof Shape);
     }
 
-    // ========== Line Tests ==========
+    // Line tests
 
     @Test
     public void testLineConstructor() {
@@ -304,7 +304,7 @@ public class AllTests {
         assertTrue(line instanceof Shape);
     }
 
-    // ========== Rectangle Tests ==========
+    // Rectangle tests
 
     @Test
     public void testRectangleConstructor() {
@@ -451,7 +451,7 @@ public class AllTests {
         assertTrue(rectangle instanceof Shape);
     }
 
-    // ========== Square Tests ==========
+    // Square tests
 
     @Test
     public void testSquareConstructor() {
@@ -585,7 +585,7 @@ public class AllTests {
         assertTrue(square instanceof Shape);
     }
 
-    // ========== Group Tests ==========
+    // Group tests
 
     @Test
     public void testGroupConstructor() {
@@ -644,10 +644,10 @@ public class AllTests {
         componentNames.add("shape2");
         Group group = new Group("group6", componentNames);
         
-        // Modify original list
+        // change the original list
         componentNames.add("shape3");
         
-        // Group should not be affected
+        // group shouldn't change
         List<String> components = group.getComponentNames();
         assertEquals(2, components.size());
         assertFalse(components.contains("shape3"));
@@ -661,11 +661,11 @@ public class AllTests {
         List<String> components1 = group.getComponentNames();
         List<String> components2 = group.getComponentNames();
         
-        // Should be equal but not the same object
+        // should be the same but different objects
         assertEquals(components1, components2);
         assertNotSame(components1, components2);
         
-        // Modifying returned list should not affect group
+        // changing the list shouldn't mess up the group
         components1.add("shape3");
         List<String> components3 = group.getComponentNames();
         assertEquals(2, components3.size());
@@ -778,9 +778,9 @@ public class AllTests {
         Group group = new Group("group1", componentNames);
         String result = group.toString();
         
-        // Should start with "group group1"
+        // should start with "group group1"
         assertTrue(result.startsWith("group group1"));
-        // Should contain component names separated by spaces
+        // should have component names with spaces between them
         assertTrue(result.contains(" shape1"));
         assertTrue(result.contains(" shape2"));
     }
@@ -792,7 +792,7 @@ public class AllTests {
         assertTrue(group instanceof Shape);
     }
 
-    // ========== Clevis Tests ==========
+    // Clevis tests
 
     @Test
     public void testClevisConstructor() {
@@ -903,7 +903,7 @@ public class AllTests {
     @Test
     public void testClevisCreateGroupEmpty() {
         Clevis clevis = new Clevis();
-        // When only group name is provided, it fails parameter count check first
+        // if you only give the group name, it fails the parameter check
         assertEquals("Error: group command requires at least 2 parameters: n n1 n2...", clevis.executeCommand("group g1"));
     }
 
@@ -1021,9 +1021,9 @@ public class AllTests {
         clevis.executeCommand("circle c1 50 60 10");
         clevis.executeCommand("group g1 r1 c1");
         String result = clevis.executeCommand("boundingbox g1");
-        // Rectangle: (10, 20, 30, 40) -> bbox: (10, 20, 30, 40)
-        // Circle: (50, 60, 10) -> bbox: (40, 50, 20, 20)
-        // Group bbox: minX=10, minY=20, maxX=60, maxY=70 -> (10, 20, 50, 50)
+        // rectangle at (10, 20) with size 30x40, so bbox is (10, 20, 30, 40)
+        // circle at (50, 60) with radius 10, so bbox is (40, 50, 20, 20)
+        // group bbox combines them: (10, 20, 50, 50)
         assertEquals("10.00 20.00 50.00 50.00", result);
     }
 
@@ -1121,7 +1121,7 @@ public class AllTests {
     public void testClevisShapeAt() {
         Clevis clevis = new Clevis();
         clevis.executeCommand("rectangle r1 10 20 30 40");
-        // Point on the edge of rectangle (within 0.05 tolerance)
+        // point on the rectangle edge (close enough, within 0.05)
         String result = clevis.executeCommand("shapeAt 10 20");
         assertEquals("r1", result);
     }
@@ -1130,7 +1130,7 @@ public class AllTests {
     public void testClevisShapeAtCircle() {
         Clevis clevis = new Clevis();
         clevis.executeCommand("circle c1 10 20 5");
-        // Point on the circle edge (at radius distance)
+        // point right on the circle edge
         String result = clevis.executeCommand("shapeAt 15 20");
         assertEquals("c1", result);
     }
@@ -1139,7 +1139,7 @@ public class AllTests {
     public void testClevisShapeAtLine() {
         Clevis clevis = new Clevis();
         clevis.executeCommand("line l1 0 0 10 10");
-        // Point on the line
+        // point on the line
         String result = clevis.executeCommand("shapeAt 5 5");
         assertEquals("l1", result);
     }
@@ -1148,7 +1148,7 @@ public class AllTests {
     public void testClevisShapeAtSquare() {
         Clevis clevis = new Clevis();
         clevis.executeCommand("square s1 10 20 30");
-        // Point on the edge of square (within 0.05 tolerance)
+        // point on the square edge (close enough, within 0.05)
         String result = clevis.executeCommand("shapeAt 10 20");
         assertEquals("s1", result);
     }
@@ -1159,7 +1159,7 @@ public class AllTests {
         clevis.executeCommand("rectangle r1 10 20 30 40");
         clevis.executeCommand("circle c1 50 60 10");
         clevis.executeCommand("group g1 r1 c1");
-        // Point on the edge of rectangle r1 (within 0.05 tolerance)
+        // point on rectangle r1's edge (close enough, within 0.05)
         String result = clevis.executeCommand("shapeAt 10 20");
         assertEquals("g1", result);
     }
@@ -1175,9 +1175,9 @@ public class AllTests {
         Clevis clevis = new Clevis();
         clevis.executeCommand("rectangle r1 10 20 30 40");
         clevis.executeCommand("rectangle r2 10 20 30 40");
-        // Point on the edge (within 0.05 tolerance)
+        // point on the edge (close enough, within 0.05)
         String result = clevis.executeCommand("shapeAt 10 20");
-        assertEquals("r2", result); // Later shape should be on top
+        assertEquals("r2", result); // the shape created later should be on top
     }
 
     @Test
@@ -1322,10 +1322,10 @@ public class AllTests {
         String result = clevis.executeCommand("listall");
         assertTrue(result.contains("g1"));
         assertTrue(result.contains("s1"));
-        // r1 and c1 appear in the group definition and as indented components
-        // Check that group definition is present
+        // r1 and c1 show up in the group definition and as indented parts
+        // make sure the group definition is there
         assertTrue(result.contains("group g1 r1 c1"));
-        // Check that r1 and c1 appear as indented components (not as separate top-level)
+        // make sure r1 and c1 show up as indented parts (not as separate top-level shapes)
         assertTrue(result.contains("  rectangle r1") || result.contains("rectangle r1 10.00"));
         assertTrue(result.contains("  circle c1") || result.contains("circle c1 50.00"));
     }
@@ -1345,12 +1345,12 @@ public class AllTests {
     @Test
     public void testClevisExecuteCommandException() {
         Clevis clevis = new Clevis();
-        // This should trigger an exception in parsing
+        // this should cause a parsing error
         String result = clevis.executeCommand("rectangle r1 invalid invalid invalid invalid");
         assertTrue(result.contains("Error"));
     }
 
-    // ========== Logger Tests ==========
+    // Logger tests
 
     @Test
     public void testLoggerConstructor() throws IOException {
@@ -1375,13 +1375,13 @@ public class AllTests {
             logger.log("test command");
             logger.close();
             
-            // Verify TXT file content
+            // check the txt file
             BufferedReader txtReader = new BufferedReader(new FileReader(txtFile));
             assertEquals("test command", txtReader.readLine());
             assertNull(txtReader.readLine());
             txtReader.close();
             
-            // Verify HTML file contains the command
+            // check the html file has the command
             BufferedReader htmlReader = new BufferedReader(new FileReader(htmlFile));
             String line;
             boolean found = false;
@@ -1439,7 +1439,7 @@ public class AllTests {
             }
             htmlReader.close();
             
-            // Check that HTML special characters are escaped
+            // make sure html special characters got escaped
             assertTrue(content.contains("&amp;"));
             assertTrue(content.contains("&lt;"));
             assertTrue(content.contains("&gt;"));
@@ -1460,7 +1460,7 @@ public class AllTests {
             logger.log("test");
             logger.close();
             
-            // Verify HTML file is properly closed with closing tags
+            // make sure the html file has all the closing tags
             BufferedReader htmlReader = new BufferedReader(new FileReader(htmlFile));
             String content = "";
             String line;

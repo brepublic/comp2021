@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
 /**
- * Represents a line segment shape.
+ * A line shape.
  */
 public class Line implements Shape {
     private String name;
@@ -11,12 +11,12 @@ public class Line implements Shape {
     private double y2;
     
     /**
-     * Creates a new line segment.
-     * @param name the unique name of the line
-     * @param x1 the x-coordinate of the first endpoint
-     * @param y1 the y-coordinate of the first endpoint
-     * @param x2 the x-coordinate of the second endpoint
-     * @param y2 the y-coordinate of the second endpoint
+     * Makes a new line.
+     * @param name the line's name
+     * @param x1 x coordinate of the first point
+     * @param y1 y coordinate of the first point
+     * @param x2 x coordinate of the second point
+     * @param y2 y coordinate of the second point
      */
     public Line(String name, double x1, double y1, double x2, double y2) {
         this.name = name;

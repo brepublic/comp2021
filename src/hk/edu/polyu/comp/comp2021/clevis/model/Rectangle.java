@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
 /**
- * Represents a rectangle shape.
+ * A rectangle shape.
  */
 public class Rectangle implements Shape {
     private String name;
@@ -11,12 +11,12 @@ public class Rectangle implements Shape {
     private double height;
     
     /**
-     * Creates a new rectangle.
-     * @param name the unique name of the rectangle
-     * @param x the x-coordinate of the top-left corner
-     * @param y the y-coordinate of the top-left corner
-     * @param width the width of the rectangle
-     * @param height the height of the rectangle
+     * Makes a new rectangle.
+     * @param name the rectangle's name
+     * @param x x coordinate of the top-left corner
+     * @param y y coordinate of the top-left corner
+     * @param width the width
+     * @param height the height
      */
     public Rectangle(String name, double x, double y, double width, double height) {
         this.name = name;

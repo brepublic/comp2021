@@ -1,18 +1,18 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
 /**
- * Base interface for all shapes in the Clevis system.
+ * Base interface for all shapes.
  */
 public interface Shape {
     /**
-     * Gets the name of the shape.
-     * @return the name of the shape
+     * Gets the shape's name.
+     * @return the shape's name
      */
     String getName();
     
     /**
-     * Gets the type of the shape.
-     * @return the type of the shape (e.g., "rectangle", "line", "circle", "square", "group")
+     * Gets the shape's type.
+     * @return the shape's type (like "rectangle", "line", "circle", "square", or "group")
      */
     String getType();
 }

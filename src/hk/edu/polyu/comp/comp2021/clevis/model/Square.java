@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
 /**
- * Represents a square shape.
+ * A square shape.
  */
 public class Square implements Shape {
     private String name;
@@ -10,11 +10,11 @@ public class Square implements Shape {
     private double sideLength;
     
     /**
-     * Creates a new square.
-     * @param name the unique name of the square
-     * @param x the x-coordinate of the top-left corner
-     * @param y the y-coordinate of the top-left corner
-     * @param sideLength the side length of the square
+     * Makes a new square.
+     * @param name the square's name
+     * @param x x coordinate of the top-left corner
+     * @param y y coordinate of the top-left corner
+     * @param sideLength the side length
      */
     public Square(String name, double x, double y, double sideLength) {
         this.name = name;

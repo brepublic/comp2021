@@ -1,7 +1,7 @@
 package hk.edu.polyu.comp.comp2021.clevis.model;
 
 /**
- * Represents a circle shape.
+ * A circle shape.
  */
 public class Circle implements Shape {
     private String name;
@@ -10,11 +10,11 @@ public class Circle implements Shape {
     private double radius;
     
     /**
-     * Creates a new circle.
-     * @param name the unique name of the circle
-     * @param x the x-coordinate of the center
-     * @param y the y-coordinate of the center
-     * @param radius the radius of the circle
+     * Makes a new circle.
+     * @param name the circle's name
+     * @param x x coordinate of the center
+     * @param y y coordinate of the center
+     * @param radius the radius
      */
     public Circle(String name, double x, double y, double radius) {
         this.name = name;

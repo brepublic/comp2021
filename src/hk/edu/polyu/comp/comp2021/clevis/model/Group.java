@@ -4,16 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Represents a group of shapes.
+ * A group of shapes.
  */
 public class Group implements Shape {
     private String name;
     private List<String> componentNames;
     
     /**
-     * Creates a new group.
-     * @param name the unique name of the group
-     * @param componentNames the names of the shapes to be grouped
+     * Makes a new group.
+     * @param name the group's name
+     * @param componentNames the names of the shapes to put in the group
      */
     public Group(String name, List<String> componentNames) {
         this.name = name;
@@ -31,8 +31,8 @@ public class Group implements Shape {
     }
     
     /**
-     * Gets the list of component shape names.
-     * @return the list of component shape names
+     * Gets the list of shape names in this group.
+     * @return the list of shape names
      */
     public List<String> getComponentNames() {
         return new ArrayList<>(componentNames);
